@@ -1,8 +1,10 @@
 import utils
+import Board
 import numpy as np
 
 def main():
-    print(utils.bitmap_to_positions(np.uint64(0xffffffffffffffff)))
+    board = Board.Board()
+    board.print_board()
 
 
 
