@@ -26,38 +26,54 @@ class Board:
                                 np.array([np.uint64(0x000000000000FF00), np.uint64(0x00FF000000000000)])])
 
     def print_board(self):
-        for i in range(self.BOARD_HEIGHT - 1, -1, -1):
-            output = ""
-            for j in range(self.BOARD_WIDTH):
-                lerf = i * self.BOARD_HEIGHT + j
-                if (utils.lerf_in_bitmap(lerf, self.get_white_king())):
-                    output += "K"
-                elif (utils.lerf_in_bitmap(lerf, self.get_black_king())):
-                    output += "k"
-                elif (utils.lerf_in_bitmap(lerf, self.get_white_queens())):
-                    output += "Q"
-                elif (utils.lerf_in_bitmap(lerf, self.get_black_queens())):
-                    output += "q"
-                elif (utils.lerf_in_bitmap(lerf, self.get_white_rooks())):
-                    output += "R"
-                elif (utils.lerf_in_bitmap(lerf, self.get_black_rooks())):
-                    output += "r"
-                elif (utils.lerf_in_bitmap(lerf, self.get_white_bishops())):
-                    output += "B"
-                elif (utils.lerf_in_bitmap(lerf, self.get_black_bishops())):
-                    output += "b"
-                elif (utils.lerf_in_bitmap(lerf, self.get_white_knights())):
-                    output += "N"
-                elif (utils.lerf_in_bitmap(lerf, self.get_black_knights())):
-                    output += "n"
-                elif (utils.lerf_in_bitmap(lerf, self.get_white_pawns())):
-                    output += "P"
-                elif (utils.lerf_in_bitmap(lerf, self.get_black_pawns())):
-                    output += "p"
+        for row in range(self.BOARD_HEIGHT - 1, -1, -1):
+            output = str(row + 1) + '\u2001'
+            for col in range(self.BOARD_WIDTH):
+                lerf = row * self.BOARD_HEIGHT + col
+                if utils.lerf_in_bitmap(lerf, self.get_white_king()):
+                    output += "♚"
+                elif utils.lerf_in_bitmap(lerf, self.get_black_king()):
+                    output += "♔"
+                elif utils.lerf_in_bitmap(lerf, self.get_white_queens()):
+                    output += "♛"
+                elif utils.lerf_in_bitmap(lerf, self.get_black_queens()):
+                    output += "♕"
+                elif utils.lerf_in_bitmap(lerf, self.get_white_rooks()):
+                    output += "♜"
+                elif utils.lerf_in_bitmap(lerf, self.get_black_rooks()):
+                    output += "♖"
+                elif utils.lerf_in_bitmap(lerf, self.get_white_bishops()):
+                    output += "♝"
+                elif utils.lerf_in_bitmap(lerf, self.get_black_bishops()):
+                    output += "♗"
+                elif utils.lerf_in_bitmap(lerf, self.get_white_knights()):
+                    output += "♞"
+                elif utils.lerf_in_bitmap(lerf, self.get_black_knights()):
+                    output += "♘"
+                elif utils.lerf_in_bitmap(lerf, self.get_white_pawns()):
+                    output += "♟"
+                elif utils.lerf_in_bitmap(lerf, self.get_black_pawns()):
+                    output += "♙"
                 else:
-                    output += "."
+                    output += '\u2001'
+                output += '\u2002'
 
             print(output)
+        # pls don't look at this unicode space magic
+        print('   a\u2007\u2004b\u2007\u2004c\u2007\u2004d\u2007\u2004e\u2007\u2004f\u2007\u2004g\u2007\u2004h')
+
+    def get_white_pieces(self):
+        res = np.uint64(0)
+        for bitmap in self.pieces:
+            res |= bitmap[self.WHITE]
+        return res
+
+    def get_black_pieces(self):
+        res = np.uint64(0)
+        for bitmap in self.pieces:
+            res |= bitmap[self.BLACK]
+        return res
+
 
     def get_white_king(self):
         return self.pieces[self.KING][self.WHITE]
