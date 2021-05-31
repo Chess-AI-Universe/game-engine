@@ -24,35 +24,37 @@ class Board:
                                 np.array([np.uint64(0x0000000000000024), np.uint64(0x2400000000000000)]),
                                 np.array([np.uint64(0x0000000000000042), np.uint64(0x4200000000000000)]),
                                 np.array([np.uint64(0x000000000000FF00), np.uint64(0x00FF000000000000)])])
+        self.player_to_move = self.WHITE
+        self.can_castle = [True, True]
 
     def print_board(self):
         for row in range(self.BOARD_HEIGHT - 1, -1, -1):
             output = str(row + 1) + '\u2001'
             for col in range(self.BOARD_WIDTH):
-                lerf = row * self.BOARD_HEIGHT + col
-                if utils.lerf_in_bitmap(lerf, self.get_white_king()):
+                index = row * self.BOARD_HEIGHT + col
+                if utils.index_in_bitmap(index, self.get_white_king()):
                     output += "♚"
-                elif utils.lerf_in_bitmap(lerf, self.get_black_king()):
+                elif utils.index_in_bitmap(index, self.get_black_king()):
                     output += "♔"
-                elif utils.lerf_in_bitmap(lerf, self.get_white_queens()):
+                elif utils.index_in_bitmap(index, self.get_white_queens()):
                     output += "♛"
-                elif utils.lerf_in_bitmap(lerf, self.get_black_queens()):
+                elif utils.index_in_bitmap(index, self.get_black_queens()):
                     output += "♕"
-                elif utils.lerf_in_bitmap(lerf, self.get_white_rooks()):
+                elif utils.index_in_bitmap(index, self.get_white_rooks()):
                     output += "♜"
-                elif utils.lerf_in_bitmap(lerf, self.get_black_rooks()):
+                elif utils.index_in_bitmap(index, self.get_black_rooks()):
                     output += "♖"
-                elif utils.lerf_in_bitmap(lerf, self.get_white_bishops()):
+                elif utils.index_in_bitmap(index, self.get_white_bishops()):
                     output += "♝"
-                elif utils.lerf_in_bitmap(lerf, self.get_black_bishops()):
+                elif utils.index_in_bitmap(index, self.get_black_bishops()):
                     output += "♗"
-                elif utils.lerf_in_bitmap(lerf, self.get_white_knights()):
+                elif utils.index_in_bitmap(index, self.get_white_knights()):
                     output += "♞"
-                elif utils.lerf_in_bitmap(lerf, self.get_black_knights()):
+                elif utils.index_in_bitmap(index, self.get_black_knights()):
                     output += "♘"
-                elif utils.lerf_in_bitmap(lerf, self.get_white_pawns()):
+                elif utils.index_in_bitmap(index, self.get_white_pawns()):
                     output += "♟"
-                elif utils.lerf_in_bitmap(lerf, self.get_black_pawns()):
+                elif utils.index_in_bitmap(index, self.get_black_pawns()):
                     output += "♙"
                 else:
                     output += '\u2001'
@@ -73,7 +75,6 @@ class Board:
         for bitmap in self.pieces:
             res |= bitmap[self.BLACK]
         return res
-
 
     def get_white_king(self):
         return self.pieces[self.KING][self.WHITE]
@@ -110,3 +111,19 @@ class Board:
 
     def get_black_pawns(self):
         return self.pieces[self.PAWNS][self.BLACK]
+
+    def get_piece_on_square(self, index):
+        for piece in range(len(self.pieces)):
+            for color in range(2):
+                if utils.index_in_bitmap(index, self.pieces[piece, color]):
+                    return piece, color
+        return None
+
+    def get_empties_bitmap(self):
+        result = np.uint64(0)
+        for i in range(self.BOARD_SIZE):
+            if self.get_piece_on_square(i) is None:
+                result |= np.uint64(2**i)
+        return result
+
+

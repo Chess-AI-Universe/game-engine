@@ -1,1 +1,1 @@
-numPy: pip install numpy
+numpy
